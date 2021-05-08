@@ -1,55 +1,57 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
 
-contract PartyToken {
+import { IERC20 } from './interfaces/IERC20.sol';
+
+contract Token is IERC20 {
   mapping (address => uint) tokenBalance;
-  mapping (address => uint) tokenAllowance;
+  mapping (address => mapping (address => uint)) tokenAllowance;
 
   constructor() {
     tokenBalance[address(this)] = totalSupply();
   }
 
-  function name() external view returns (string memory) {
+  function name() public override pure returns (string memory) {
     return "PartyEther";
   }
 
-  function symbol() external view returns (string memory) {
+  function symbol() public override pure returns (string memory) {
     return "prETH";
   }
 
-  function decimals() external view returns (uint8) {
+  function decimals() public override pure returns (uint8) {
     return 18;
   }
 
-  function totalSupply() external view returns (uint) {
+  function totalSupply() public override pure returns (uint) {
     return 32 ether;
   }
 
-  function balanceOf(address owner) external view returns (uint) {
+  function balanceOf(address owner) public override view returns (uint) {
     return tokenBalance[owner];
   }
 
-  function allowance(address owner, address spender) external view returns (uint) {
+  function allowance(address owner, address spender) public override view returns (uint) {
     return tokenAllowance[owner][spender];
   }
 
-  function approve(address spender, uint value) external returns (bool) {
+  function approve(address spender, uint value) public override returns (bool) {
     tokenAllowance[msg.sender][spender] = value;
     emit Approval(msg.sender, spender, value);
     return true;
   }
 
-  function transfer(address to, uint value) external returns (bool) {
+  function transfer(address to, uint value) public override returns (bool) {
     if (balanceOf(msg.sender) <= value) {
       return false;
     }
     tokenBalance[msg.sender] -= value;
     tokenBalance[to] += value;
     emit Transfer(msg.sender, to, value);
-    return true
+    return true;
   }
 
-  function transferFrom(address from, address to, uint value) external returns (bool) {
+  function transferFrom(address from, address to, uint value) public override returns (bool) {
     if (tokenAllowance[from][msg.sender] < value) {
       return false;
     }

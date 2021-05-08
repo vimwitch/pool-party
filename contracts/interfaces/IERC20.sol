@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.7.0;
+pragma solidity >=0.8.0;
 
 abstract contract IERC20 {
   event Approval(address indexed owner, address indexed spender, uint value);
