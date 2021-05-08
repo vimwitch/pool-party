@@ -42,7 +42,7 @@ contract Token is IERC20 {
   }
 
   function transfer(address to, uint value) public override returns (bool) {
-    if (balanceOf(msg.sender) <= value) {
+    if (balanceOf(msg.sender) < value) {
       return false;
     }
     tokenBalance[msg.sender] -= value;
